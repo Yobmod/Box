@@ -351,6 +351,16 @@ class Box(dict):
 
     def get(self, key, default=NO_DEFAULT):
         if key not in self:
+            if self._box_config["box_dots"] and isinstance(key, str) and ("." in key or "[" in key):
+                first_item, children = _parse_box_dots(self, key)
+                if first_item in self.keys():
+                    if hasattr(self[first_item], "get"):
+                        return self[first_item].get(children, default)
+                    elif isinstance(self[first_item], box.BoxList):
+                        try:
+                            return self[first_item][children]
+                        except (KeyError, IndexError, TypeError):
+                            pass
             if default is NO_DEFAULT:
                 if self._box_config["default_box"] and self._box_config["default_box_none_transform"]:
                     return self.__get_default(key)

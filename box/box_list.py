@@ -27,6 +27,10 @@ from box.converters import (
 )
 from box.exceptions import BoxError, BoxTypeError
 
+# a sentinel object for indicating no default, in order to allow users
+# to pass `None` as a valid default value
+NO_DEFAULT = object()
+
 _list_pos_re = re.compile(r"\[(\d+)\]")
 
 
@@ -59,7 +63,7 @@ class BoxList(list):
             for method in ["append", "extend", "insert", "pop", "remove", "reverse", "sort"]:
                 self.__setattr__(method, frozen)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item, default=NO_DEFAULT):
         if self.box_options.get("box_dots") and isinstance(item, str) and item.startswith("["):
             list_pos = _list_pos_re.search(item)
             value = super(BoxList, self).__getitem__(int(list_pos.groups()[0]))

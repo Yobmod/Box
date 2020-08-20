@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 5.1.1
+-------------
+
+* Fixing `box_dots` to work with `get`
+
 
 Version 5.1.0
 -------------
